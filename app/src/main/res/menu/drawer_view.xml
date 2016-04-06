@@ -3,8 +3,38 @@
 
   <group android:checkableBehavior="single">
     <item
-        android:id="@+id/nav_home"
-        android:title="Home" />
+        android:id="@+id/nav_lenta"
+        android:title="@string/menu.lenta"
+        android:icon="@drawable/ic_chrome_reader_mode" />
+    <item
+        android:id="@+id/nav_catalog"
+        android:title="@string/menu.catalog"
+        android:icon="@drawable/ic_tab" />
+    <item
+      android:id="@+id/nav_favorite"
+      android:title="@string/menu.favorite"
+      android:icon="@drawable/ic_favorite" />
+    <item
+        android:id="@+id/nav_bookmarks"
+        android:title="@string/menu.bookmarks"
+        android:icon="@drawable/ic_collections_bookmark" />
+    <item
+        android:id="@+id/nav_history"
+        android:title="@string/menu.history"
+        android:icon="@drawable/ic_query_builder" />
+    <item
+      android:id="@+id/nav_playlist"
+      android:title="@string/menu.playlist"
+      android:icon="@drawable/ic_featured_play_list" />
+    <item
+        android:id="@+id/nav_downloads"
+        android:title="@string/menu.downloads"
+        android:icon="@drawable/ic_archive" />
+    <item
+        android:id="@+id/nav_settings"
+        android:title="@string/menu.settings"
+        android:icon="@drawable/ic_settings" />
+
   </group>
 
 </menu>

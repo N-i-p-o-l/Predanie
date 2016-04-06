@@ -1,6 +1,14 @@
 <resources>
-  <string name="app_name">Predanie</string>
+  <string name="app_name">Предание.ру</string>
 
 <!-- TODO: Remove or change this placeholder text -->
-  <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="hello_blank_fragment">В разработке...</string>
+  <string name="menu.lenta">Лента</string>
+  <string name="menu.catalog">Каталог</string>
+  <string name="menu.favorite">Избранное</string>
+  <string name="menu.bookmarks">Закладки</string>
+  <string name="menu.history">История</string>
+  <string name="menu.playlist">Плейлисты</string>
+  <string name="menu.downloads">Загрузки</string>
+  <string name="menu.settings">Настройки</string>
 </resources>
