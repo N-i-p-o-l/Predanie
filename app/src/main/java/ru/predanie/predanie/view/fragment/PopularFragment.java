@@ -28,6 +28,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.predanie.predanie.R;
+import ru.predanie.predanie.api.CompositionDeserializer;
+import ru.predanie.predanie.api.CustomGson;
 import ru.predanie.predanie.api.IApi;
 import ru.predanie.predanie.api.ServiceGenerator;
 import ru.predanie.predanie.model.Composition;
@@ -49,18 +51,8 @@ public class PopularFragment extends Fragment {
   private Map<String, String> queryMap;
 
   public PopularFragment() {
-    //Mock
-    /*Composition mockComposition = new Composition();
-    mockComposition.setAuthor("Test Author");
-    mockComposition.setName("Test Name");
-    compositionList.add(mockComposition);*/
     compositionList = new CopyOnWriteArrayList<>();
-
-    Type listType = new TypeToken<List<Composition>>(){}.getType();
-    Gson gson = new GsonBuilder()
-        .registerTypeAdapter(listType, new CompositionDeserializer())
-        .create();
-    compositionApi = ServiceGenerator.createService(IApi.class, gson);
+    compositionApi = ServiceGenerator.createService(IApi.class, CustomGson.getGsonCompositions());
 
     queryMap = new HashMap<>(4);
     queryMap.put("hd", "0");
@@ -98,23 +90,6 @@ public class PopularFragment extends Fragment {
     creationsRecycleView.setLayoutManager(layoutManager);
 
     return rootView;
-  }
-
-  private class CompositionDeserializer implements JsonDeserializer<List<Composition>> {
-    @Override
-    public List<Composition> deserialize(JsonElement je, Type typeOfT, JsonDeserializationContext jdc)
-        throws JsonParseException {
-
-      JsonArray data = je.getAsJsonObject().getAsJsonArray("compositions");
-      List<Composition> myList = new ArrayList<>();
-
-      for (JsonElement e : data)
-      {
-        myList.add((Composition)jdc.deserialize(e, Composition.class));
-      }
-
-      return myList;
-    }
   }
 
 }
