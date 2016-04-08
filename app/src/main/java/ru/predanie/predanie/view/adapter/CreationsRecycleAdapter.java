@@ -7,17 +7,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.List;
 import ru.predanie.predanie.R;
-import ru.predanie.predanie.model.Creation;
+import ru.predanie.predanie.model.Composition;
 
 /**
  * Created by NArtur on 07.04.2016.
  */
 public class CreationsRecycleAdapter extends RecyclerView.Adapter {
 
-  private List<Creation> creationList;
+  private List<Composition> compositionList;
 
-  public CreationsRecycleAdapter(List<Creation> creationList) {
-    this.creationList = creationList;
+  public CreationsRecycleAdapter(List<Composition> compositionList) {
+    this.compositionList = compositionList;
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -28,15 +28,15 @@ public class CreationsRecycleAdapter extends RecyclerView.Adapter {
   }
 
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-    Creation creation = creationList.get(position);
+    Composition composition = compositionList.get(position);
     CreationsViewHolder creationsViewHolder = (CreationsViewHolder) holder;
 
-    creationsViewHolder.creationName.setText(creation.getName());
-    creationsViewHolder.creationAuthor.setText(creation.getAuthor());
+    creationsViewHolder.creationName.setText(composition.getName());
+    creationsViewHolder.creationAuthor.setText(composition.getAuthor());
   }
 
   @Override public int getItemCount() {
-    return creationList.size();
+    return compositionList.size();
   }
 
   public class CreationsViewHolder extends RecyclerView.ViewHolder {

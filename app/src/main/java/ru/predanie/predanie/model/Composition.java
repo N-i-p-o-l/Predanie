@@ -1,17 +1,24 @@
 package ru.predanie.predanie.model;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
  * Created by NArtur on 07.04.2016.
  */
-public class Creation {
+public class Composition {
+
+  @SerializedName("Id")
   private long id;
+
+  @SerializedName("author_name")
   private String Author;
+
+  @SerializedName("name")
   private String Name;
-  private String Description;
+
+  @SerializedName("img_s")
   private String ImageUrl;
-  private List<Book> bookList;
 
   public long getId() {
     return id;
@@ -37,14 +44,6 @@ public class Creation {
     Name = name;
   }
 
-  public String getDescription() {
-    return Description;
-  }
-
-  public void setDescription(String description) {
-    Description = description;
-  }
-
   public String getImageUrl() {
     return ImageUrl;
   }
@@ -53,11 +52,4 @@ public class Creation {
     ImageUrl = imageUrl;
   }
 
-  public List<Book> getBookList() {
-    return bookList;
-  }
-
-  public void setBookList(List<Book> bookList) {
-    this.bookList = bookList;
-  }
 }
