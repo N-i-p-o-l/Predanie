@@ -11,4 +11,6 @@
   <string name="menu.playlist">Плейлисты</string>
   <string name="menu.downloads">Загрузки</string>
   <string name="menu.settings">Настройки</string>
+  <string name="error.network">Не удалось загрузить</string>
+  <string name="retry">Повторить</string>
 </resources>
