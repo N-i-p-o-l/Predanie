@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     adapter.addFragment(new NewFragment(), "Новое");
     adapter.addFragment(new RecommendFragment(), "Рекомендуем");
     viewPager.setAdapter(adapter);
+    viewPager.setOffscreenPageLimit(3);
   }
 
   @Override

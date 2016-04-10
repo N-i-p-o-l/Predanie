@@ -9,20 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import com.annimon.stream.Stream;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +20,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.predanie.predanie.R;
-import ru.predanie.predanie.api.CompositionDeserializer;
 import ru.predanie.predanie.api.CustomGson;
 import ru.predanie.predanie.api.IApi;
 import ru.predanie.predanie.api.ServiceGenerator;
 import ru.predanie.predanie.model.Composition;
-import ru.predanie.predanie.view.adapter.CreationsRecycleAdapter;
+import ru.predanie.predanie.view.adapter.CompositionRecycleAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,9 +33,9 @@ public class PopularFragment extends Fragment {
 
   private final String TAG = "PopularFragment";
 
-  private RecyclerView creationsRecycleView;
+  private RecyclerView compositionRecycleView;
   private RecyclerView.LayoutManager layoutManager;
-  private CreationsRecycleAdapter creationsRecycleAdapter;
+  private CompositionRecycleAdapter compositionRecycleAdapter;
   private ProgressBar progressBar;
   private FrameLayout frameLayout;
 
@@ -76,12 +64,12 @@ public class PopularFragment extends Fragment {
     View rootView = inflater.inflate(R.layout.fragment_popular, container, false);
     setRetainInstance(true);
 
-    creationsRecycleView = (RecyclerView) rootView.findViewById(R.id.creationsRecyclerView);
+    compositionRecycleView = (RecyclerView) rootView.findViewById(R.id.compositionRecyclerView);
     progressBar = (ProgressBar) rootView.findViewById(R.id.popular_spinner);
     frameLayout = (FrameLayout) rootView.findViewById(R.id.popularRootLayout);
 
     layoutManager = new LinearLayoutManager(getActivity());
-    creationsRecycleView.setLayoutManager(layoutManager);
+    compositionRecycleView.setLayoutManager(layoutManager);
     getCompositions();
 
     return rootView;
@@ -94,8 +82,8 @@ public class PopularFragment extends Fragment {
       @Override
       public void onResponse(Call<List<Composition>> call, Response<List<Composition>> response) {
         Stream.of(response.body()).forEach(compositionList::add);
-        creationsRecycleAdapter = new CreationsRecycleAdapter(compositionList);
-        creationsRecycleView.setAdapter(creationsRecycleAdapter);
+        compositionRecycleAdapter = new CompositionRecycleAdapter(compositionList);
+        compositionRecycleView.setAdapter(compositionRecycleAdapter);
         progressBar.setVisibility(View.GONE);
       }
 
