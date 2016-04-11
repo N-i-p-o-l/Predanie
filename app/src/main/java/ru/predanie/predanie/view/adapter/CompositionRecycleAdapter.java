@@ -1,5 +1,6 @@
 package ru.predanie.predanie.view.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 import ru.predanie.predanie.R;
 import ru.predanie.predanie.model.Composition;
+import ru.predanie.predanie.view.activity.CompositionDetailActivity;
 
 /**
  * Created by NArtur on 07.04.2016.
@@ -35,6 +37,13 @@ public class CompositionRecycleAdapter extends RecyclerView.Adapter {
 
     creationsViewHolder.creationName.setText(composition.getName());
     creationsViewHolder.creationAuthor.setText(composition.getAuthor());
+
+    holder.itemView.setOnClickListener((v) -> {
+      Intent intent = new Intent(v.getContext(), CompositionDetailActivity.class);
+      intent.putExtra(CompositionDetailActivity.COMPOSITION_ID, composition.getId());
+      v.getContext().startActivity(intent);
+    });
+
     Glide.with(creationsViewHolder.compositionImage.getContext())
         .load(composition.getImageUrl())
         .into(creationsViewHolder.compositionImage);

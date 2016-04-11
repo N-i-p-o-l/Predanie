@@ -20,4 +20,12 @@ public class CustomGson {
     return gson;
   }
 
+  public static Gson getGsonCompDetail() {
+    Type type = new TypeToken<Composition>(){}.getType();
+    Gson gson = new GsonBuilder()
+        .registerTypeAdapter(type, new CompDetailDeserializer())
+        .create();
+    return gson;
+  }
+
 }

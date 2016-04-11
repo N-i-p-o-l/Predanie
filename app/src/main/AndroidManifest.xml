@@ -18,6 +18,8 @@
       </intent-filter>
     </activity>
 
+    <activity android:name=".view.activity.CompositionDetailActivity"/>
+
   </application>
 
 </manifest>

@@ -13,4 +13,6 @@
   <string name="menu.settings">Настройки</string>
   <string name="error.network">Не удалось загрузить</string>
   <string name="retry">Повторить</string>
+  <string name="composition.content">Содержание</string>
+  <string name="composition.desc">Описание</string>
 </resources>

@@ -19,4 +19,7 @@ public interface IApi {
   @GET("/api/mobile/v1/compositions/{category}/")
   Call<List<Composition>> getCompositions(@Path("category") String category,
       @QueryMap Map<String, String> options);
+
+  @GET("/api/mobile/v1/composition-single/")
+  Call<Composition> getCompositionDetail(@Query("composition_id") long id);
 }
