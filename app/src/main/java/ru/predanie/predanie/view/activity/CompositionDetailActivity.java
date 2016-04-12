@@ -2,6 +2,7 @@ package ru.predanie.predanie.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import ru.predanie.predanie.api.CustomGson;
 import ru.predanie.predanie.api.IApi;
 import ru.predanie.predanie.api.ServiceGenerator;
 import ru.predanie.predanie.model.Composition;
+import ru.predanie.predanie.view.fragment.CompPartsFragment;
 
 /**
  * Created by NArtur on 11.04.2016.
@@ -29,6 +31,8 @@ public class CompositionDetailActivity extends AppCompatActivity {
   private ImageView compImage;
   private TextView compName;
   private TextView compAuthor;
+
+  private FragmentManager fragmentManager;
 
   private IApi compositionApi;
 
@@ -52,12 +56,16 @@ public class CompositionDetailActivity extends AppCompatActivity {
     Call<Composition> call = compositionApi.getCompositionDetail(comp_id);
     call.enqueue(new Callback<Composition>() {
       @Override public void onResponse(Call<Composition> call, Response<Composition> response) {
-        compName.setText(response.body().getName());
-        compAuthor.setText(response.body().getAuthor());
 
         Glide.with(CompositionDetailActivity.this)
             .load(response.body().getImageMediumUrl())
             .into(compImage);
+
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+            .replace(R.id.composition_content, CompPartsFragment.newInstance())
+            .commit();
+
       }
 
       @Override public void onFailure(Call<Composition> call, Throwable t) {
