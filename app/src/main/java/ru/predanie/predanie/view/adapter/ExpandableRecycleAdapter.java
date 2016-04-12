@@ -2,6 +2,7 @@ package ru.predanie.predanie.view.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ import ru.predanie.predanie.R;
  * Created by NArtur on 12.04.2016.
  */
 public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+  private final String TAG = "ExpRecycleAdapter";
+
   public static final int HEADER = 0;
   public static final int CHILD = 1;
 
@@ -39,7 +43,6 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
         TextView itemTextView = new TextView(context);
         itemTextView.setPadding(subItemPaddingLeft, subItemPaddingTopAndBottom, 0,
             subItemPaddingTopAndBottom);
-        //itemTextView.setTextColor(0x88000000);
         itemTextView.setLayoutParams(
             new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -53,6 +56,9 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
 
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     final PartTrackItem item = data.get(position);
+    holder.itemView.setOnClickListener((v) -> {
+      Log.d(TAG, item.trackId + "clicked");
+    });
     switch (item.type) {
       case HEADER:
         final ListHeaderViewHolder itemController = (ListHeaderViewHolder) holder;
@@ -118,14 +124,18 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
   public static class PartTrackItem {
 
     public int type;
-    public int trackId;
+    public long trackId;
     public String partName;
     public String trackName;
     public List<PartTrackItem> invisibleChildren;
 
-    public PartTrackItem(int type, int trackId, String partName, String trackName) {
-      this.trackId = trackId;
+    public PartTrackItem(int type, String partName) {
       this.partName = partName;
+      this.type = type;
+    }
+
+    public PartTrackItem(int type, long trackId, String trackName) {
+      this.trackId = trackId;
       this.trackName = trackName;
       this.type = type;
     }

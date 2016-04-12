@@ -36,6 +36,11 @@ public class CompositionDetailActivity extends AppCompatActivity {
 
   private IApi compositionApi;
 
+  private Composition composition;
+  public Composition getComposition() {
+    return composition;
+  }
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -57,9 +62,21 @@ public class CompositionDetailActivity extends AppCompatActivity {
     call.enqueue(new Callback<Composition>() {
       @Override public void onResponse(Call<Composition> call, Response<Composition> response) {
 
+        composition = new Composition();
+        composition.setId(response.body().getId());
+        composition.setName(response.body().getName());
+        composition.setAuthor(response.body().getAuthor());
+        composition.setImageMediumUrl(response.body().getImageMediumUrl());
+        composition.setImageBigUrl(response.body().getImageBigUrl());
+        composition.setDesc(response.body().getDesc());
+        composition.setParts(response.body().getParts());
+        composition.setTracks(response.body().getTracks());
+
+        compName.setText(composition.getName());
+        compAuthor.setText(composition.getAuthor());
+
         Glide.with(CompositionDetailActivity.this)
-            .load(response.body().getImageMediumUrl())
-            .into(compImage);
+            .load(response.body().getImageMediumUrl()).into(compImage);
 
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()

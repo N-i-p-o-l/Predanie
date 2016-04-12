@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 import ru.predanie.predanie.R;
+import ru.predanie.predanie.model.Part;
+import ru.predanie.predanie.model.Track;
+import ru.predanie.predanie.view.activity.CompositionDetailActivity;
 import ru.predanie.predanie.view.adapter.ExpandableRecycleAdapter;
 
 /**
@@ -19,7 +22,13 @@ public class CompPartsFragment extends Fragment {
 
   private RecyclerView recyclerView;
 
-  public CompPartsFragment() {}
+  private List<ExpandableRecycleAdapter.PartTrackItem> data;
+  private Track[] tracks;
+  private Part[] parts;
+
+  public CompPartsFragment() {
+    data = new ArrayList<>();
+  }
 
   public static CompPartsFragment newInstance() {
     CompPartsFragment fragment = new CompPartsFragment();
@@ -28,6 +37,26 @@ public class CompPartsFragment extends Fragment {
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    tracks = ((CompositionDetailActivity) getActivity()).getComposition().getTracks();
+    parts = ((CompositionDetailActivity) getActivity()).getComposition().getParts();
+
+    for (int i = 0; i < parts.length; i++) {
+      ExpandableRecycleAdapter.PartTrackItem items = new ExpandableRecycleAdapter
+          .PartTrackItem(ExpandableRecycleAdapter.HEADER, parts[i].getName());
+      items.invisibleChildren = new ArrayList<>();
+      /*data.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.HEADER,
+          parts[i].getName()));*/
+      for (int j = 0; j < tracks.length; j++) {
+        if (tracks[j].getParent() == parts[i].getId()) {
+          items.invisibleChildren.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.CHILD,
+              tracks[j].getId(), tracks[j].getName()));
+          /*data.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.CHILD,
+              tracks[j].getId(), tracks[j].getName()));*/
+        }
+      }
+      data.add(items);
+    }
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,11 +67,6 @@ public class CompPartsFragment extends Fragment {
 
     recyclerView = (RecyclerView) rootView.findViewById(R.id.compPartsRecyclerView);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-
-    List<ExpandableRecycleAdapter.PartTrackItem> data = new ArrayList<>();
-    data.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.HEADER, 0, "Book 1", ""));
-    data.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.CHILD, 555, "", "Track 1"));
-
     recyclerView.setAdapter(new ExpandableRecycleAdapter(data));
 
     return rootView;
