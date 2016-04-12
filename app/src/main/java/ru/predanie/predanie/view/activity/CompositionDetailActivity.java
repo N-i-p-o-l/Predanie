@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -19,6 +20,7 @@ import ru.predanie.predanie.api.CustomGson;
 import ru.predanie.predanie.api.IApi;
 import ru.predanie.predanie.api.ServiceGenerator;
 import ru.predanie.predanie.model.Composition;
+import ru.predanie.predanie.view.fragment.CompDescFragment;
 import ru.predanie.predanie.view.fragment.CompPartsFragment;
 
 /**
@@ -35,6 +37,7 @@ public class CompositionDetailActivity extends AppCompatActivity {
   private TextView compName;
   private TextView compAuthor;
   private TextView toolbarTitle;
+  private Button content, description;
 
   private Toolbar toolbar;
 
@@ -57,6 +60,8 @@ public class CompositionDetailActivity extends AppCompatActivity {
     compName = (TextView)findViewById(R.id.composition_detail_name);
     compAuthor = (TextView) findViewById(R.id.composition_detail_author);
     toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+    content = (Button) findViewById(R.id.composition_books);
+    description = (Button) findViewById(R.id.composition_desc);
 
     if (toolbar != null) {
       setSupportActionBar(toolbar);
@@ -69,6 +74,20 @@ public class CompositionDetailActivity extends AppCompatActivity {
     comp_id = intent.getLongExtra(COMPOSITION_ID, 0);
 
     getCompDetail();
+
+    content.setOnClickListener((v) -> {
+      fragmentManager = getSupportFragmentManager();
+      fragmentManager.beginTransaction()
+          .replace(R.id.composition_content, CompPartsFragment.newInstance())
+          .commit();
+    });
+
+    description.setOnClickListener((v) -> {
+      fragmentManager = getSupportFragmentManager();
+      fragmentManager.beginTransaction()
+          .replace(R.id.composition_content, CompDescFragment.newInstance())
+          .commit();
+    });
   }
 
   private void getCompDetail() {
@@ -116,11 +135,6 @@ public class CompositionDetailActivity extends AppCompatActivity {
       default:
         return super.onOptionsItemSelected(item);
     }
-  }
-
-  @Override
-  protected void onStart() {
-    super.onStart();
   }
 
 }
