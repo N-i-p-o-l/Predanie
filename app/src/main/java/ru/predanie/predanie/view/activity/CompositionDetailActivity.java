@@ -1,10 +1,13 @@
 package ru.predanie.predanie.view.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
@@ -31,6 +34,9 @@ public class CompositionDetailActivity extends AppCompatActivity {
   private ImageView compImage;
   private TextView compName;
   private TextView compAuthor;
+  private TextView toolbarTitle;
+
+  private Toolbar toolbar;
 
   private FragmentManager fragmentManager;
 
@@ -46,9 +52,18 @@ public class CompositionDetailActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.composition_detail_view);
 
+    toolbar = (Toolbar) findViewById(R.id.compDetailToolbar);
     compImage = (ImageView) findViewById(R.id.composition_detail_image);
     compName = (TextView)findViewById(R.id.composition_detail_name);
     compAuthor = (TextView) findViewById(R.id.composition_detail_author);
+    toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+
+    if (toolbar != null) {
+      setSupportActionBar(toolbar);
+    }
+
+    getSupportActionBar().setDisplayShowTitleEnabled(false);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     Intent intent = getIntent();
     comp_id = intent.getLongExtra(COMPOSITION_ID, 0);
@@ -76,13 +91,13 @@ public class CompositionDetailActivity extends AppCompatActivity {
         compAuthor.setText(composition.getAuthor());
 
         Glide.with(CompositionDetailActivity.this)
-            .load(response.body().getImageMediumUrl()).into(compImage);
+            .load(response.body().getImageMediumUrl())
+            .into(compImage);
 
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
             .replace(R.id.composition_content, CompPartsFragment.newInstance())
             .commit();
-
       }
 
       @Override public void onFailure(Call<Composition> call, Throwable t) {
@@ -90,6 +105,17 @@ public class CompositionDetailActivity extends AppCompatActivity {
       }
     });
 
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        onBackPressed();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
+    }
   }
 
   @Override
