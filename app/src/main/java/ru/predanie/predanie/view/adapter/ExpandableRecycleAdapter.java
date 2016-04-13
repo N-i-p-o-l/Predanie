@@ -134,6 +134,12 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
       this.type = type;
     }
 
+    public PartTrackItem(int type, String partName, long trackId) {
+      this.partName = partName;
+      this.type = type;
+      this.trackId = trackId;
+    }
+
     public PartTrackItem(int type, long trackId, String trackName) {
       this.trackId = trackId;
       this.trackName = trackName;

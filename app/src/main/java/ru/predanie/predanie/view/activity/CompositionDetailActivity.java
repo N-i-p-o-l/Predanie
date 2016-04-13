@@ -1,15 +1,19 @@
 package ru.predanie.predanie.view.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import retrofit2.Call;
@@ -38,6 +42,8 @@ public class CompositionDetailActivity extends AppCompatActivity {
   private TextView compAuthor;
   private TextView toolbarTitle;
   private Button content, description;
+  private ProgressBar compAuthorProgress;
+  private ProgressBar compPartsProgress;
 
   private Toolbar toolbar;
 
@@ -62,6 +68,8 @@ public class CompositionDetailActivity extends AppCompatActivity {
     toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
     content = (Button) findViewById(R.id.composition_books);
     description = (Button) findViewById(R.id.composition_desc);
+    compAuthorProgress = (ProgressBar) findViewById(R.id.comp_detail_author_progress);
+    compPartsProgress = (ProgressBar) findViewById(R.id.comp_detail_parts_progress);
 
     if (toolbar != null) {
       setSupportActionBar(toolbar);
@@ -117,9 +125,14 @@ public class CompositionDetailActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
             .replace(R.id.composition_content, CompPartsFragment.newInstance())
             .commit();
+
+        compAuthorProgress.setVisibility(View.GONE);
+        compPartsProgress.setVisibility(View.GONE);
       }
 
       @Override public void onFailure(Call<Composition> call, Throwable t) {
+        compAuthorProgress.setVisibility(View.GONE);
+        compPartsProgress.setVisibility(View.GONE);
         Log.d(TAG, "Error on load comp details");
       }
     });

@@ -41,22 +41,7 @@ public class CompPartsFragment extends Fragment {
     tracks = ((CompositionDetailActivity) getActivity()).getComposition().getTracks();
     parts = ((CompositionDetailActivity) getActivity()).getComposition().getParts();
 
-    for (int i = 0; i < parts.length; i++) {
-      ExpandableRecycleAdapter.PartTrackItem items = new ExpandableRecycleAdapter
-          .PartTrackItem(ExpandableRecycleAdapter.HEADER, parts[i].getName());
-      items.invisibleChildren = new ArrayList<>();
-      /*data.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.HEADER,
-          parts[i].getName()));*/
-      for (int j = 0; j < tracks.length; j++) {
-        if (tracks[j].getParent() == parts[i].getId()) {
-          items.invisibleChildren.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.CHILD,
-              tracks[j].getId(), tracks[j].getName()));
-          /*data.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.CHILD,
-              tracks[j].getId(), tracks[j].getName()));*/
-        }
-      }
-      data.add(items);
-    }
+    fillList();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,5 +55,31 @@ public class CompPartsFragment extends Fragment {
     recyclerView.setAdapter(new ExpandableRecycleAdapter(data));
 
     return rootView;
+  }
+
+  private void fillList() {
+    if (parts != null) {
+      for (int i = 0; i < parts.length; i++) {
+        ExpandableRecycleAdapter.PartTrackItem items = new ExpandableRecycleAdapter
+            .PartTrackItem(ExpandableRecycleAdapter.HEADER, parts[i].getName());
+        items.invisibleChildren = new ArrayList<>();
+      /*data.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.HEADER,
+          parts[i].getName()));*/
+        for (int j = 0; j < tracks.length; j++) {
+          if (tracks[j].getParent() == parts[i].getId()) {
+            items.invisibleChildren.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.CHILD,
+                tracks[j].getId(), tracks[j].getName()));
+          /*data.add(new ExpandableRecycleAdapter.PartTrackItem(ExpandableRecycleAdapter.CHILD,
+              tracks[j].getId(), tracks[j].getName()));*/
+          }
+        }
+        data.add(items);
+      }
+    } else {
+      for (int j = 0; j < tracks.length; j++) {
+        data.add(new ExpandableRecycleAdapter
+            .PartTrackItem(ExpandableRecycleAdapter.HEADER, tracks[j].getName(), tracks[j].getId()));
+      }
+    }
   }
 }

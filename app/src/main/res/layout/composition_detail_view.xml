@@ -30,11 +30,20 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
 
+    <ProgressBar
+        android:id="@+id/comp_detail_author_progress"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        android:visibility="visible"
+        android:indeterminate="false"
+        />
+
     <ImageView
         android:layout_width="128dp"
         android:layout_height="144dp"
         android:layout_margin="8dp"
-        android:background="@mipmap/ic_launcher"
         android:id="@+id/composition_detail_image"
         />
 
@@ -48,7 +57,6 @@
         android:layout_marginStart="16dp"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:text="Хроники Нарнии"
         android:id="@+id/composition_detail_name"
         />
     <TextView
@@ -61,8 +69,9 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:textSize="18sp"
-        android:text="Люьис Клайв Степлз"
         android:id="@+id/composition_detail_author"/>
+
+
   </RelativeLayout>
 
   <View
@@ -112,6 +121,15 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
+
+    <ProgressBar
+        android:id="@+id/comp_detail_parts_progress"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/colorPrimaryDark"
+        android:visibility="visible"/>
+
   </FrameLayout>
 
 
