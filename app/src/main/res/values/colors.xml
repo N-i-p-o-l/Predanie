@@ -6,4 +6,5 @@
     <color name="window_background">#FFFFFF</color>
     <color name="black">#ffffff</color>
     <color name="foreground_material_light">#ffffff</color>
+    <color name="colorBackground">#D4E5FF</color>
 </resources>

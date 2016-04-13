@@ -94,6 +94,9 @@
         android:textColor="@android:color/white"
         android:text="@string/composition.content"
         android:id="@+id/composition_books"
+        android:alpha="0.3"
+        android:enabled="false"
+        android:clickable="false"
         />
 
     <Button
@@ -106,6 +109,9 @@
         android:layout_toEndOf="@+id/composition_books"
         android:text="@string/composition.desc"
         android:id="@+id/composition_desc"
+        android:alpha="0.3"
+        android:enabled="false"
+        android:clickable="false"
         />
 
   </RelativeLayout>

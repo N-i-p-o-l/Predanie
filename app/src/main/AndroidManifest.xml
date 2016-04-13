@@ -19,6 +19,8 @@
     </activity>
 
     <activity android:name=".view.activity.CompositionDetailActivity"/>
+    <activity android:name=".view.activity.MusicPlayerActivity"
+        android:screenOrientation="portrait"/>
 
   </application>
 

@@ -128,6 +128,7 @@ public class CompositionDetailActivity extends AppCompatActivity {
 
         compAuthorProgress.setVisibility(View.GONE);
         compPartsProgress.setVisibility(View.GONE);
+        enableButtons();
       }
 
       @Override public void onFailure(Call<Composition> call, Throwable t) {
@@ -137,6 +138,15 @@ public class CompositionDetailActivity extends AppCompatActivity {
       }
     });
 
+  }
+
+  private void enableButtons() {
+    content.setEnabled(true);
+    content.setAlpha(1f);
+    content.setClickable(true);
+    description.setEnabled(true);
+    description.setAlpha(1f);
+    description.setClickable(true);
   }
 
   @Override
