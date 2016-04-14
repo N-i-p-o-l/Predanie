@@ -3,6 +3,7 @@ package ru.predanie.predanie.view.activity;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -21,7 +22,9 @@ import ru.predanie.predanie.view.adapter.ExpandableRecycleAdapter;
 /**
  * Created by NArtur on 13.04.2016.
  */
-public class MusicPlayerActivity extends AppCompatActivity {
+public class MusicPlayerActivity extends AppCompatActivity
+    implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener,
+    MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnErrorListener {
 
   private final static String TAG = "MusicPlayer";
 
@@ -39,6 +42,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
   private Toolbar toolbar;
 
   private MediaPlayer mediaPlayer;
+  private boolean played;
   private int itemChoose;
   private String imageUrl;
   private String compName;
@@ -80,17 +84,29 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     mediaPlayer = new MediaPlayer();
     mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    mediaPlayer.setOnPreparedListener(this);
+    mediaPlayer.setOnCompletionListener(this);
+    mediaPlayer.setOnBufferingUpdateListener(this);
+    mediaPlayer.setOnErrorListener(this);
 
-    /*Exceptional.of(() -> {
+    Exceptional.of(() -> {
       mediaPlayer.setDataSource(trackItem.url);
-      mediaPlayer.prepare();
+      mediaPlayer.prepareAsync();
       return true;
     }).ifException(e -> Log.e(TAG, e.toString()));
 
     playPause.setOnClickListener((v) -> {
-      mediaPlayer.start();
-    });*/
-
+      if (played) {
+        mediaPlayer.pause();
+        playPause.setImageDrawable(
+            ContextCompat.getDrawable(this, R.drawable.ic_action_playback_pause));
+        played = false;
+      } else {
+        mediaPlayer.start();
+        playPause.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_playback_play));
+        played = true;
+      }
+    });
   }
 
   @Override
@@ -102,5 +118,29 @@ public class MusicPlayerActivity extends AppCompatActivity {
       default:
         return super.onOptionsItemSelected(item);
     }
+  }
+
+  @Override public void onPrepared(MediaPlayer mp) {
+    if (!mediaPlayer.isPlaying()) {
+      mediaPlayer.start();
+      seekBar.setProgress(0);
+      seekBar.setMax(100);
+      played = true;
+    }
+    Log.d(TAG, "MediaPlayer prepared");
+  }
+
+  @Override public void onCompletion(MediaPlayer mp) {
+    mediaPlayer.reset();
+    seekBar.setProgress(0);
+  }
+
+  @Override public void onBufferingUpdate(MediaPlayer mp, int percent) {
+    seekBar.setProgress(percent);
+  }
+
+  @Override public boolean onError(MediaPlayer mp, int what, int extra) {
+    Log.d(TAG, "MediaPlayer Error");
+    return false;
   }
 }
