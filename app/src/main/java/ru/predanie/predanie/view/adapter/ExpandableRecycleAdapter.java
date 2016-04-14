@@ -1,6 +1,10 @@
 package ru.predanie.predanie.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,9 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import ru.predanie.predanie.R;
+import ru.predanie.predanie.view.activity.CompositionDetailActivity;
+import ru.predanie.predanie.view.activity.MusicPlayerActivity;
 
 /**
  * Created by NArtur on 12.04.2016.
@@ -22,10 +29,13 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
   public static final int HEADER = 0;
   public static final int CHILD = 1;
 
-  private List<PartTrackItem> data;
+  private ArrayList<PartTrackItem> data;
+  private String imageUrl, compName;
 
-  public ExpandableRecycleAdapter(List<PartTrackItem> data) {
+  public ExpandableRecycleAdapter(ArrayList<PartTrackItem> data, String imageUrl, String compName) {
     this.data = data;
+    this.imageUrl = imageUrl;
+    this.compName = compName;
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,6 +67,14 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     final PartTrackItem item = data.get(position);
     holder.itemView.setOnClickListener((v) -> {
+      Intent intent = new Intent(v.getContext(), MusicPlayerActivity.class);
+      Bundle bundle = new Bundle();
+      bundle.putParcelable(MusicPlayerActivity.DATA_KEY, item);
+      bundle.putInt(MusicPlayerActivity.ID_KEY, position);
+      bundle.putString(MusicPlayerActivity.IMAGE_URL, imageUrl);
+      bundle.putString(MusicPlayerActivity.COMP_NAME, compName);
+      intent.putExtras(bundle);
+      v.getContext().startActivity(intent);
       Log.d(TAG, item.trackId + "clicked");
     });
     switch (item.type) {
@@ -121,12 +139,13 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
     }
   }
 
-  public static class PartTrackItem {
+  public static class PartTrackItem implements Parcelable {
 
     public int type;
     public long trackId;
     public String partName;
     public String trackName;
+    public String url;
     public List<PartTrackItem> invisibleChildren;
 
     public PartTrackItem(int type, String partName) {
@@ -134,17 +153,50 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
       this.type = type;
     }
 
-    public PartTrackItem(int type, String partName, long trackId) {
+    public PartTrackItem(int type, String partName, long trackId, String url) {
       this.partName = partName;
       this.type = type;
       this.trackId = trackId;
+      this.url = url;
     }
 
-    public PartTrackItem(int type, long trackId, String trackName) {
+    public PartTrackItem(int type, long trackId, String trackName, String url) {
       this.trackId = trackId;
       this.trackName = trackName;
       this.type = type;
+      this.url = url;
     }
 
+    protected PartTrackItem(Parcel in) {
+      type = in.readInt();
+      trackId = in.readLong();
+      partName = in.readString();
+      trackName = in.readString();
+      url = in.readString();
+      //invisibleChildren = in.createTypedArrayList(PartTrackItem.CREATOR);
+    }
+
+    public static final Creator<PartTrackItem> CREATOR = new Creator<PartTrackItem>() {
+      @Override public PartTrackItem createFromParcel(Parcel in) {
+        return new PartTrackItem(in);
+      }
+
+      @Override public PartTrackItem[] newArray(int size) {
+        return new PartTrackItem[size];
+      }
+    };
+
+    @Override public int describeContents() {
+      return 0;
+    }
+
+    @Override public void writeToParcel(Parcel dest, int flags) {
+      dest.writeInt(type);
+      dest.writeLong(trackId);
+      dest.writeString(partName);
+      dest.writeString(trackName);
+      dest.writeString(url);
+      //dest.writeTypedList(invisibleChildren);
+    }
   }
 }

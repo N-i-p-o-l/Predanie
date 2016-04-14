@@ -28,20 +28,18 @@
 
   <ImageView
       android:layout_width="192dp"
-      android:layout_height="256dp"
+      android:layout_height="288dp"
       android:scaleType="fitCenter"
       android:layout_gravity="center"
       android:id="@+id/music_image"/>
-
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:textColor="@android:color/white"
-        android:background="@color/colorPrimaryDark"
-        android:padding="8dp"
+        android:background="@color/colorPrimary"
+        android:padding="16dp"
         android:textSize="20sp"
-        android:text="AAAAAAAAAAAAAAAAAAAAAAAAAAA"
         android:id="@+id/trackName"
         />
 
@@ -54,10 +52,14 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginTop="32dp">
+      android:layout_weight="2"
+      android:paddingTop="16dp"
+      android:background="@color/colorPrimaryDark"
+      >
 
     <ImageView
         android:id="@+id/prev"
+        android:layout_gravity="center"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_weight="1"
@@ -67,6 +69,7 @@
 
     <ImageView
         android:id="@+id/play_pause"
+        android:layout_gravity="center"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_weight="2"
@@ -76,6 +79,7 @@
 
     <ImageView
         android:id="@+id/next"
+        android:layout_gravity="center"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_weight="1"
@@ -84,5 +88,20 @@
         />
 
   </LinearLayout>
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_weight="2"
+      android:background="@color/colorPrimaryDark"
+      >
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_height="32dp"
+        android:layout_margin="16dp"
+        android:id="@+id/seekBar"/>
+  </FrameLayout>
 
 </LinearLayout>

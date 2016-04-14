@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -117,7 +117,7 @@ public class CompositionDetailActivity extends AppCompatActivity {
         compName.setText(composition.getName());
         compAuthor.setText(composition.getAuthor());
 
-        Glide.with(CompositionDetailActivity.this)
+        Picasso.with(CompositionDetailActivity.this)
             .load(response.body().getImageMediumUrl())
             .into(compImage);
 

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 import java.util.List;
 import ru.predanie.predanie.R;
 import ru.predanie.predanie.model.Composition;
@@ -44,7 +44,7 @@ public class CompositionRecycleAdapter extends RecyclerView.Adapter {
       v.getContext().startActivity(intent);
     });
 
-    Glide.with(creationsViewHolder.compositionImage.getContext())
+    Picasso.with(creationsViewHolder.compositionImage.getContext())
         .load(composition.getImageUrl())
         .into(creationsViewHolder.compositionImage);
   }
