@@ -104,11 +104,11 @@ public class MusicPlayerActivity extends AppCompatActivity
       if (played) {
         mediaPlayer.pause();
         playPause.setImageDrawable(
-            ContextCompat.getDrawable(this, R.drawable.ic_action_playback_pause));
+            ContextCompat.getDrawable(this, R.drawable.ic_action_playback_play));
         played = false;
       } else {
         mediaPlayer.start();
-        playPause.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_playback_play));
+        playPause.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_playback_pause));
         played = true;
       }
     });
@@ -123,7 +123,8 @@ public class MusicPlayerActivity extends AppCompatActivity
 
     seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        mediaPlayer.seekTo(progress);
+        mediaPlayer.seekTo(progress * 100);
+        Log.d(TAG, "Seekbar seek");
       }
 
       @Override public void onStartTrackingTouch(SeekBar seekBar) {
@@ -151,15 +152,15 @@ public class MusicPlayerActivity extends AppCompatActivity
     if (!mediaPlayer.isPlaying()) {
       mediaPlayer.start();
       seekBar.setProgress(0);
-      seekBar.setMax(mp.getDuration());
+      seekBar.setMax(mp.getDuration() / 100);
       played = true;
       playPause.setImageDrawable(
           ContextCompat.getDrawable(this, R.drawable.ic_action_playback_pause));
     }
 
-    ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+    /*ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
     service.scheduleWithFixedDelay(
-        (Runnable) () -> seekBar.setProgress(mediaPlayer.getCurrentPosition()), 1, 1, TimeUnit.MICROSECONDS);
+        (Runnable) () -> seekBar.setProgress(mediaPlayer.getCurrentPosition()), 1, 1, TimeUnit.SECONDS);*/
 
     Log.d(TAG, "MediaPlayer prepared");
   }
@@ -169,9 +170,9 @@ public class MusicPlayerActivity extends AppCompatActivity
   }
 
   private void nextSong() {
-    mediaPlayer.stop();
+    mediaPlayer.reset();
     currentTrack++;
-    if (currentTrack > trackItems.size() - 1) {
+    if (currentTrack > (trackItems.size() - 1)) {
       currentTrack = 0;
     }
     trackName.setText(trackItems.get(currentTrack).trackName);
@@ -183,7 +184,7 @@ public class MusicPlayerActivity extends AppCompatActivity
   }
 
   private void prevSong() {
-    mediaPlayer.stop();
+    mediaPlayer.release();
     currentTrack--;
     if (currentTrack < 0) {
       currentTrack = trackItems.size() - 1;
