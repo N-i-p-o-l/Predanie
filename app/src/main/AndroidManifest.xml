@@ -10,7 +10,8 @@
       android:icon="@mipmap/ic_launcher"
       android:theme="@style/AppTheme">
 
-    <activity android:name=".view.activity.MainActivity">
+    <activity android:name=".view.activity.MainActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.DEFAULT" />
@@ -18,7 +19,8 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".view.activity.CompositionDetailActivity"/>
+    <activity android:name=".view.activity.CompositionDetailActivity"
+        android:configChanges="keyboardHidden|orientation|screenSize"/>
     <activity android:name=".view.activity.MusicPlayerActivity"
         android:screenOrientation="portrait"/>
 

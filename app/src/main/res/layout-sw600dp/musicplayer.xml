@@ -8,40 +8,40 @@
     >
 
   <android.support.v7.widget.Toolbar
-        android:id="@+id/musicToolbar"
-        android:layout_width="match_parent"
+      android:id="@+id/musicToolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="?attr/actionBarSize"
+      android:theme="@style/ToolbarTheme"
+      app:titleTextAppearance="@style/Toolbar.TitleText"
+      app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+    <TextView
+        android:id="@+id/musicToolbarTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ToolbarTheme"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        android:textColor="@android:color/white"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        android:layout_gravity="center"/>
 
-      <TextView
-          android:id="@+id/musicToolbarTitle"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textColor="@android:color/white"
-          style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-          android:layout_gravity="center"/>
-
-    </android.support.v7.widget.Toolbar>
+  </android.support.v7.widget.Toolbar>
 
   <ImageView
-      android:layout_width="224dp"
-      android:layout_height="304dp"
+      android:layout_width="384dp"
+      android:layout_height="512dp"
       android:scaleType="fitCenter"
       android:layout_gravity="center"
       android:id="@+id/music_image"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:textColor="@android:color/white"
-        android:background="@color/colorPrimary"
-        android:padding="16dp"
-        android:textSize="20sp"
-        android:id="@+id/trackName"
-        />
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="64dp"
+      android:textColor="@android:color/white"
+      android:background="@color/colorPrimary"
+      android:padding="16dp"
+      android:textSize="20sp"
+      android:id="@+id/trackName"
+      />
 
   <View
       android:layout_width="fill_parent"

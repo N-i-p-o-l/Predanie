@@ -16,6 +16,9 @@ import android.widget.TextView;
 import com.annimon.stream.Exceptional;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import ru.predanie.predanie.R;
 import ru.predanie.predanie.view.adapter.ExpandableRecycleAdapter;
 
@@ -107,6 +110,20 @@ public class MusicPlayerActivity extends AppCompatActivity
         played = true;
       }
     });
+
+    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+      @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        mediaPlayer.seekTo(progress);
+      }
+
+      @Override public void onStartTrackingTouch(SeekBar seekBar) {
+
+      }
+
+      @Override public void onStopTrackingTouch(SeekBar seekBar) {
+
+      }
+    });
   }
 
   @Override
@@ -124,9 +141,16 @@ public class MusicPlayerActivity extends AppCompatActivity
     if (!mediaPlayer.isPlaying()) {
       mediaPlayer.start();
       seekBar.setProgress(0);
-      seekBar.setMax(100);
+      seekBar.setMax(mp.getDuration());
       played = true;
+      playPause.setImageDrawable(
+          ContextCompat.getDrawable(this, R.drawable.ic_action_playback_pause));
     }
+
+    ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+    service.scheduleWithFixedDelay(
+        (Runnable) () -> seekBar.setProgress(mediaPlayer.getCurrentPosition()), 1, 1, TimeUnit.MICROSECONDS);
+
     Log.d(TAG, "MediaPlayer prepared");
   }
 
@@ -136,7 +160,6 @@ public class MusicPlayerActivity extends AppCompatActivity
   }
 
   @Override public void onBufferingUpdate(MediaPlayer mp, int percent) {
-    seekBar.setProgress(percent);
   }
 
   @Override public boolean onError(MediaPlayer mp, int what, int extra) {
