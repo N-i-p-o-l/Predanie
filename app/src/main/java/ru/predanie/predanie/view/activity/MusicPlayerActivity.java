@@ -49,8 +49,9 @@ public class MusicPlayerActivity extends AppCompatActivity
   private int itemChoose;
   private String imageUrl;
   private String compName;
+  private int currentTrack;
 
-  private ExpandableRecycleAdapter.PartTrackItem trackItem;
+  private ArrayList<ExpandableRecycleAdapter.PartTrackItem> trackItems;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +74,13 @@ public class MusicPlayerActivity extends AppCompatActivity
     getSupportActionBar().setDisplayShowTitleEnabled(false);
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-    trackItem = getIntent().getExtras().getParcelable(DATA_KEY);
+    trackItems = getIntent().getExtras().getParcelableArrayList(DATA_KEY);
     imageUrl = getIntent().getExtras().getString(IMAGE_URL);
     compName = getIntent().getExtras().getString(COMP_NAME);
+    itemChoose = getIntent().getExtras().getInt(ID_KEY);
 
     toolbarTitle.setText(compName);
-    trackName.setText(TextUtils.isEmpty(trackItem.trackName) ?
-        trackItem.partName : trackItem.trackName);
+    currentTrack = itemChoose;
 
     Picasso.with(this)
         .load(imageUrl)
@@ -92,8 +93,9 @@ public class MusicPlayerActivity extends AppCompatActivity
     mediaPlayer.setOnBufferingUpdateListener(this);
     mediaPlayer.setOnErrorListener(this);
 
+    trackName.setText(trackItems.get(itemChoose).trackName);
     Exceptional.of(() -> {
-      mediaPlayer.setDataSource(trackItem.url);
+      mediaPlayer.setDataSource(trackItems.get(itemChoose).url);
       mediaPlayer.prepareAsync();
       return true;
     }).ifException(e -> Log.e(TAG, e.toString()));
@@ -109,6 +111,14 @@ public class MusicPlayerActivity extends AppCompatActivity
         playPause.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_action_playback_play));
         played = true;
       }
+    });
+
+    prev.setOnClickListener((v) -> {
+       prevSong();
+    });
+
+    next.setOnClickListener((v) -> {
+      nextSong();
     });
 
     seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -155,8 +165,35 @@ public class MusicPlayerActivity extends AppCompatActivity
   }
 
   @Override public void onCompletion(MediaPlayer mp) {
-    mediaPlayer.reset();
-    seekBar.setProgress(0);
+    //nextSong();
+  }
+
+  private void nextSong() {
+    mediaPlayer.stop();
+    currentTrack++;
+    if (currentTrack > trackItems.size() - 1) {
+      currentTrack = 0;
+    }
+    trackName.setText(trackItems.get(currentTrack).trackName);
+    Exceptional.of(() -> {
+      mediaPlayer.setDataSource(trackItems.get(currentTrack).url);
+      mediaPlayer.prepareAsync();
+      return true;
+    }).ifException(e -> Log.e(TAG, e.toString()));
+  }
+
+  private void prevSong() {
+    mediaPlayer.stop();
+    currentTrack--;
+    if (currentTrack < 0) {
+      currentTrack = trackItems.size() - 1;
+    }
+    trackName.setText(trackItems.get(currentTrack).trackName);
+    Exceptional.of(() -> {
+      mediaPlayer.setDataSource(trackItems.get(currentTrack).url);
+      mediaPlayer.prepareAsync();
+      return true;
+    }).ifException(e -> Log.e(TAG, e.toString()));
   }
 
   @Override public void onBufferingUpdate(MediaPlayer mp, int percent) {

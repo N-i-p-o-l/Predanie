@@ -6,15 +6,20 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.annimon.stream.Collectors;
+import com.annimon.stream.Stream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import org.w3c.dom.Text;
 import ru.predanie.predanie.R;
 import ru.predanie.predanie.view.activity.CompositionDetailActivity;
 import ru.predanie.predanie.view.activity.MusicPlayerActivity;
@@ -30,12 +35,28 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
   public static final int CHILD = 1;
 
   private ArrayList<PartTrackItem> data;
+  private ArrayList<PartTrackItem> playlist;
   private String imageUrl, compName;
 
   public ExpandableRecycleAdapter(ArrayList<PartTrackItem> data, String imageUrl, String compName) {
     this.data = data;
     this.imageUrl = imageUrl;
     this.compName = compName;
+    fillPlaylist();
+  }
+
+  private void fillPlaylist() {
+    playlist = new ArrayList<>();
+    for (PartTrackItem item : data) {
+      if (item.url != null) {
+        playlist.add(item);
+      } else {
+        for (PartTrackItem child : item.invisibleChildren) {
+          playlist.add(child);
+        }
+      }
+
+    }
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,23 +81,25 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
         return new RecyclerView.ViewHolder(itemTextView) {
         };
     }
-
     return null;
   }
 
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     final PartTrackItem item = data.get(position);
-    holder.itemView.setOnClickListener((v) -> {
-      Intent intent = new Intent(v.getContext(), MusicPlayerActivity.class);
-      Bundle bundle = new Bundle();
-      bundle.putParcelable(MusicPlayerActivity.DATA_KEY, item);
-      bundle.putInt(MusicPlayerActivity.ID_KEY, position);
-      bundle.putString(MusicPlayerActivity.IMAGE_URL, imageUrl);
-      bundle.putString(MusicPlayerActivity.COMP_NAME, compName);
-      intent.putExtras(bundle);
-      v.getContext().startActivity(intent);
-      Log.d(TAG, item.trackId + "clicked");
-    });
+    if (!TextUtils.isEmpty(item.url)) {
+      holder.itemView.setOnClickListener((v) -> {
+        Intent intent = new Intent(v.getContext(), MusicPlayerActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(MusicPlayerActivity.DATA_KEY, playlist);
+        PartTrackItem playItem = Stream.of(playlist).filter(t -> t.url == item.url).findFirst().get();
+        bundle.putInt(MusicPlayerActivity.ID_KEY, playlist.indexOf(playItem));
+        bundle.putString(MusicPlayerActivity.IMAGE_URL, imageUrl);
+        bundle.putString(MusicPlayerActivity.COMP_NAME, compName);
+        intent.putExtras(bundle);
+        v.getContext().startActivity(intent);
+        Log.d(TAG, item.trackId + "clicked");
+      });
+    }
     switch (item.type) {
       case HEADER:
         final ListHeaderViewHolder itemController = (ListHeaderViewHolder) holder;
@@ -173,7 +196,7 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
       partName = in.readString();
       trackName = in.readString();
       url = in.readString();
-      //invisibleChildren = in.createTypedArrayList(PartTrackItem.CREATOR);
+      invisibleChildren = in.createTypedArrayList(PartTrackItem.CREATOR);
     }
 
     public static final Creator<PartTrackItem> CREATOR = new Creator<PartTrackItem>() {
@@ -196,7 +219,7 @@ public class ExpandableRecycleAdapter extends RecyclerView.Adapter<RecyclerView.
       dest.writeString(partName);
       dest.writeString(trackName);
       dest.writeString(url);
-      //dest.writeTypedList(invisibleChildren);
+      dest.writeTypedList(invisibleChildren);
     }
   }
 }
