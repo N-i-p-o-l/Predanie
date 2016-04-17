@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/composition_detail_image"
         android:layout_toEndOf="@+id/composition_detail_image"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:textSize="24sp"
@@ -65,12 +65,11 @@
         android:layout_toRightOf="@+id/composition_detail_image"
         android:layout_toEndOf="@+id/composition_detail_image"
         android:layout_below="@+id/composition_detail_name"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:textSize="18sp"
         android:id="@+id/composition_detail_author"/>
-
 
   </RelativeLayout>
 

@@ -3,14 +3,18 @@ package ru.predanie.predanie.view.activity;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import com.annimon.stream.Exceptional;
@@ -27,7 +31,8 @@ import ru.predanie.predanie.view.adapter.ExpandableRecycleAdapter;
  */
 public class MusicPlayerActivity extends AppCompatActivity
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener,
-    MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnErrorListener {
+    MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnErrorListener,
+    MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnInfoListener {
 
   private final static String TAG = "MusicPlayer";
 
@@ -43,6 +48,8 @@ public class MusicPlayerActivity extends AppCompatActivity
   private ImageView prev, next;
   private SeekBar seekBar;
   private Toolbar toolbar;
+  private ProgressBar progressBar;
+  private LinearLayout linearLayout;
 
   private MediaPlayer mediaPlayer;
   private boolean played;
@@ -66,6 +73,8 @@ public class MusicPlayerActivity extends AppCompatActivity
     seekBar = (SeekBar) findViewById(R.id.seekBar);
     toolbar = (Toolbar) findViewById(R.id.musicToolbar);
     toolbarTitle = (TextView) findViewById(R.id.musicToolbarTitle);
+    progressBar = (ProgressBar) findViewById(R.id.musicLoadSpinner);
+    linearLayout = (LinearLayout) findViewById(R.id.musicMainLayout);
 
     if (toolbar != null) {
       setSupportActionBar(toolbar);
@@ -92,8 +101,12 @@ public class MusicPlayerActivity extends AppCompatActivity
     mediaPlayer.setOnCompletionListener(this);
     mediaPlayer.setOnBufferingUpdateListener(this);
     mediaPlayer.setOnErrorListener(this);
+    mediaPlayer.setOnSeekCompleteListener(this);
+    mediaPlayer.setOnInfoListener(this);
 
-    trackName.setText(trackItems.get(itemChoose).trackName);
+    trackName.setText(trackItems.get(itemChoose).trackName != null ?
+        trackItems.get(itemChoose).trackName : trackItems.get(itemChoose).partName);
+
     Exceptional.of(() -> {
       mediaPlayer.setDataSource(trackItems.get(itemChoose).url);
       mediaPlayer.prepareAsync();
@@ -123,8 +136,7 @@ public class MusicPlayerActivity extends AppCompatActivity
 
     seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
       @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        mediaPlayer.seekTo(progress * 100);
-        Log.d(TAG, "Seekbar seek");
+
       }
 
       @Override public void onStartTrackingTouch(SeekBar seekBar) {
@@ -132,7 +144,9 @@ public class MusicPlayerActivity extends AppCompatActivity
       }
 
       @Override public void onStopTrackingTouch(SeekBar seekBar) {
-
+        progressBar.setVisibility(View.VISIBLE);
+        mediaPlayer.seekTo(seekBar.getProgress() * 100);
+        Log.d(TAG, "Seekbar seek");
       }
     });
   }
@@ -158,24 +172,27 @@ public class MusicPlayerActivity extends AppCompatActivity
           ContextCompat.getDrawable(this, R.drawable.ic_action_playback_pause));
     }
 
-    /*ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+    ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
     service.scheduleWithFixedDelay(
-        (Runnable) () -> seekBar.setProgress(mediaPlayer.getCurrentPosition()), 1, 1, TimeUnit.SECONDS);*/
+        (Runnable) () -> seekBar.setProgress(mediaPlayer.getCurrentPosition() / 100), 1, 1, TimeUnit.SECONDS);
 
+    progressBar.setVisibility(View.GONE);
     Log.d(TAG, "MediaPlayer prepared");
   }
 
   @Override public void onCompletion(MediaPlayer mp) {
-    //nextSong();
+    nextSong();
   }
 
   private void nextSong() {
+    progressBar.setVisibility(View.VISIBLE);
     mediaPlayer.reset();
     currentTrack++;
     if (currentTrack > (trackItems.size() - 1)) {
       currentTrack = 0;
     }
-    trackName.setText(trackItems.get(currentTrack).trackName);
+    trackName.setText(trackItems.get(currentTrack).trackName != null ?
+        trackItems.get(currentTrack).trackName : trackItems.get(currentTrack).partName);
     Exceptional.of(() -> {
       mediaPlayer.setDataSource(trackItems.get(currentTrack).url);
       mediaPlayer.prepareAsync();
@@ -184,12 +201,14 @@ public class MusicPlayerActivity extends AppCompatActivity
   }
 
   private void prevSong() {
-    mediaPlayer.release();
+    progressBar.setVisibility(View.VISIBLE);
+    mediaPlayer.reset();
     currentTrack--;
     if (currentTrack < 0) {
       currentTrack = trackItems.size() - 1;
     }
-    trackName.setText(trackItems.get(currentTrack).trackName);
+    trackName.setText(trackItems.get(currentTrack).trackName != null ?
+        trackItems.get(currentTrack).trackName : trackItems.get(currentTrack).partName);
     Exceptional.of(() -> {
       mediaPlayer.setDataSource(trackItems.get(currentTrack).url);
       mediaPlayer.prepareAsync();
@@ -201,7 +220,31 @@ public class MusicPlayerActivity extends AppCompatActivity
   }
 
   @Override public boolean onError(MediaPlayer mp, int what, int extra) {
+    progressBar.setVisibility(View.GONE);
+    Snackbar.make(linearLayout, getString(R.string.error_network), Snackbar.LENGTH_LONG)
+        .show();
     Log.d(TAG, "MediaPlayer Error");
     return false;
+  }
+
+  @Override public void onSeekComplete(MediaPlayer mp) {
+    progressBar.setVisibility(View.GONE);
+  }
+
+  @Override public boolean onInfo(MediaPlayer mp, int what, int extra) {
+    switch (what) {
+      case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+        progressBar.setVisibility(View.VISIBLE);
+      case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+        progressBar.setVisibility(View.GONE);
+    }
+
+    return false;
+  }
+
+  @Override
+  public void onDestroy(){
+    super.onDestroy();
+    mediaPlayer.release();
   }
 }

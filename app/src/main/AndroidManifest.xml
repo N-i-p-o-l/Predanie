@@ -22,7 +22,8 @@
     <activity android:name=".view.activity.CompositionDetailActivity"
         android:configChanges="keyboardHidden|orientation|screenSize"/>
     <activity android:name=".view.activity.MusicPlayerActivity"
-        android:screenOrientation="portrait"/>
+        android:screenOrientation="portrait"
+        android:launchMode="singleTask"/>
 
   </application>
 

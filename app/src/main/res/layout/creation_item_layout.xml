@@ -24,11 +24,11 @@
         android:layout_toEndOf="@+id/creation_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
-        android:text="Хроники Нарнии"
-        android:textSize="24sp"
+        android:text="Хроники Нарнии AAAAAAAAAAAAAAA"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <TextView
@@ -41,8 +41,8 @@
         android:layout_toRightOf="@+id/creation_image"
         android:layout_toEndOf="@+id/creation_image"
         android:layout_below="@+id/creation_name"
-        android:text="Люьис Клайв Степлз"
-        android:textSize="18sp"/>
+        android:text="Люьис Клайв Степлз AAAAAAAAAAAAAAAA"
+        android:textSize="16sp"/>
 
     <View
         android:layout_width="fill_parent"
